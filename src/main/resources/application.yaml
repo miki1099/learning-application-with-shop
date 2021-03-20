@@ -13,5 +13,6 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+    generate-ddl: true
   messages:
     basename: messages/messages
