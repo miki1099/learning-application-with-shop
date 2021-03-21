@@ -6,9 +6,11 @@ import com.example.learningapplicationwithshop.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -19,8 +21,10 @@ public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
 
+
     @Override
-    public Page<User> getAllUsers(Pageable pageable) {
+    public Page<User> getAllUsers(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
         return userRepository.findAll(pageable);
     }
 
@@ -42,5 +46,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    public Optional<User> findByLogin(String login) {
+        return userRepository.findByLogin(login);
+    }
+
+    @Override
+    public Boolean isExistsByLogin(String login) {
+        return userRepository.existsByLogin(login);
+    }
+
+    @Override
+    public Boolean isExistsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }
