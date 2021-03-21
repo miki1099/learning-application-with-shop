@@ -14,7 +14,7 @@ public interface UserService {
 
     List<UserDto> getAllUsers(int page, int size);
 
-    void deleteUser(UserDto user);
+    void deleteUserById(int id);
 
     UserDto getUserByLastName(String lastname);
 

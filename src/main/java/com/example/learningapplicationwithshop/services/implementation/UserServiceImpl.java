@@ -43,8 +43,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteUser(UserDto user) {
-        userRepository.delete(modelMapper.map(user, User.class));
+    public void deleteUserById(int id) {
+        if(userRepository.findById(id).isPresent()) {
+            userRepository.deleteById(id);
+        } else {
+            throw new UserNotFoundException();
+        }
+
     }
 
     @Override
