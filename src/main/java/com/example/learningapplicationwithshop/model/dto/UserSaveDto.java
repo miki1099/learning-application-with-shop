@@ -4,13 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
+public class UserSaveDto {
 
     private int id;
 
@@ -27,11 +24,5 @@ public class UserDto {
     private AddressDto address;
 
     private String phone;
-
-    private Set<OrderDto> orders = new HashSet<>();
-
-    private Set<ScoreDto> scores = new HashSet<>();
-
-    Set<RoleDto> roles = new HashSet<>();
 
 }

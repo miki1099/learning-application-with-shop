@@ -1,56 +1,83 @@
 package com.example.learningapplicationwithshop.services.implementation;
 
+import com.example.learningapplicationwithshop.exceptions.UserNotFoundException;
+import com.example.learningapplicationwithshop.model.Address;
 import com.example.learningapplicationwithshop.model.User;
+import com.example.learningapplicationwithshop.model.dto.UserDto;
+import com.example.learningapplicationwithshop.model.dto.UserSaveDto;
+import com.example.learningapplicationwithshop.repositories.RoleRepository;
 import com.example.learningapplicationwithshop.repositories.UserRepository;
 import com.example.learningapplicationwithshop.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
 @AllArgsConstructor
-@NoArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    UserRepository userRepository;
+    private UserRepository userRepository;
+    private RoleRepository roleRepository;
 
+    private ModelMapper modelMapper = new ModelMapper();
 
     @Override
-    public Page<User> getAllUsers(int page, int size) {
+    public List<UserDto> getAllUsers(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return userRepository.findAll(pageable);
+        return userRepository.findAll(pageable).getContent().stream()
+                .map(user -> modelMapper.map(user, UserDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void deleteUser(User user) {
-        userRepository.delete(user);
+    @Transactional
+    public void deleteUser(UserDto user) {
+        userRepository.delete(modelMapper.map(user, User.class));
     }
 
     @Override
-    public Optional<User> getUserByLastName(String lastname) {
-        return userRepository.findFirstByLastName(lastname);
+    public UserDto getUserByLastName(String lastname) {
+        Optional<User> userFound = userRepository.findFirstByLastName(lastname);
+        return userFound.map(user -> modelMapper.map(user, UserDto.class)).orElse(null);
     }
 
     @Override
-    public User createUser(User user) {
-        return userRepository.save(user);
+    @Transactional
+    public UserDto createUser(UserSaveDto user) {
+        User userSaved = userRepository.save(modelMapper.map(user, User.class));
+        userSaved.setRoles(Set.of(roleRepository.getOne(1)));
+        return modelMapper.map(userSaved, UserDto.class);
     }
 
     @Override
-    public User updateUser(User user) {
-        return userRepository.save(user);
+    @Transactional
+    public UserDto updateUser(Integer id, UserSaveDto user) {
+        User userFound = getOneSafe(id);
+        userFound.setId(id);
+        if(user.getAddress() != null) userFound.setAddress(modelMapper.map(user.getAddress(), Address.class));
+        if(user.getEmail() != null) userFound.setEmail(user.getEmail());
+        if(user.getName() != null) userFound.setName(user.getName());
+        if(user.getLastName() != null) userFound.setLastName(user.getLastName());
+        if(user.getPhone() != null) userFound.setPhone(user.getPhone());
+        return modelMapper.map(userFound, UserDto.class);
     }
 
     @Override
-    public Optional<User> findByLogin(String login) {
-        return userRepository.findByLogin(login);
+    public UserDto findByLogin(String login) {
+        Optional<User> userFound= userRepository.findByLogin(login);
+        return userFound.map(user -> modelMapper.map(user, UserDto.class)).orElse(null);
     }
 
     @Override
@@ -62,4 +89,13 @@ public class UserServiceImpl implements UserService {
     public Boolean isExistsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+
+    private User getOneSafe(Integer id) {
+        if (userRepository.existsById(id)) {
+            return userRepository.getOne(id);
+        } else {
+            throw new UserNotFoundException();
+        }
+    }
+
 }

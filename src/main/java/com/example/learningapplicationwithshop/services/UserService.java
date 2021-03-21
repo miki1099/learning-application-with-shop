@@ -2,6 +2,8 @@ package com.example.learningapplicationwithshop.services;
 
 
 import com.example.learningapplicationwithshop.model.User;
+import com.example.learningapplicationwithshop.model.dto.UserDto;
+import com.example.learningapplicationwithshop.model.dto.UserSaveDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -10,17 +12,17 @@ import java.util.Optional;
 
 public interface UserService {
 
-    Page<User> getAllUsers(int page, int size);
+    List<UserDto> getAllUsers(int page, int size);
 
-    void deleteUser(User user);
+    void deleteUser(UserDto user);
 
-    Optional<User> getUserByLastName(String lastname);
+    UserDto getUserByLastName(String lastname);
 
-    User createUser(User user);
+    UserDto createUser(UserSaveDto user);
 
-    User updateUser(User user);
+    UserDto updateUser(Integer id, UserSaveDto user);
 
-    Optional<User> findByLogin(String login);
+    UserDto findByLogin(String login);
 
     Boolean isExistsByLogin(String login);
 
