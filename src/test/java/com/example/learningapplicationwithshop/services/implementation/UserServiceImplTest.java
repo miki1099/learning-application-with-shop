@@ -7,19 +7,16 @@ import com.example.learningapplicationwithshop.model.dto.UserDto;
 import com.example.learningapplicationwithshop.model.dto.UserSaveDto;
 import com.example.learningapplicationwithshop.repositories.RoleRepository;
 import com.example.learningapplicationwithshop.repositories.UserRepository;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.*;
 
 import java.util.ArrayList;
@@ -28,8 +25,6 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -158,7 +153,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void findByLogin() {
+    void findByLastName() {
         String lastName = user1.getLastName();
         when(userRepository.findByLogin(anyString())).thenReturn(Optional.of(user1));
 
@@ -171,4 +166,19 @@ class UserServiceImplTest {
         verify(userRepository, times(1)).findByLogin(anyString());
 
     }
+
+    @Test
+    void findByEmail() {
+        String email = user1.getEmail();
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user1));
+
+        UserDto foundUser = userService.findByEmail(email);
+
+        assertEquals(user1.getId(), foundUser.getId());
+        assertEquals(user1.getLastName(), foundUser.getLastName());
+        assertEquals(user1.getPassword(), foundUser.getPassword());
+
+        verify(userRepository, times(1)).findByEmail(anyString());
+    }
+
 }

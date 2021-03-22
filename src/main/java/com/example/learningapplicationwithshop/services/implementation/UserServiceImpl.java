@@ -5,6 +5,7 @@ import com.example.learningapplicationwithshop.model.Address;
 import com.example.learningapplicationwithshop.model.User;
 import com.example.learningapplicationwithshop.model.dto.UserDto;
 import com.example.learningapplicationwithshop.model.dto.UserSaveDto;
+import com.example.learningapplicationwithshop.repositories.AddressRepository;
 import com.example.learningapplicationwithshop.repositories.RoleRepository;
 import com.example.learningapplicationwithshop.repositories.UserRepository;
 import com.example.learningapplicationwithshop.services.UserService;
@@ -28,10 +29,11 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final AddressRepository addressRepository;
 
-    private ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper = new ModelMapper();
 
     @Override
     public List<UserDto> getAllUsers(int page, int size) {
@@ -47,7 +49,7 @@ public class UserServiceImpl implements UserService {
         if(userRepository.findById(id).isPresent()) {
             userRepository.deleteById(id);
         } else {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException("id");
         }
 
     }
@@ -55,7 +57,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserByLastName(String lastname) {
         Optional<User> userFound = userRepository.findFirstByLastName(lastname);
-        return userFound.map(user -> modelMapper.map(user, UserDto.class)).orElse(null);
+        if(userFound.isPresent()) return modelMapper.map(userFound.get(), UserDto.class);
+        else throw new UserNotFoundException("Last Name");
     }
 
     @Override
@@ -71,7 +74,13 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(Integer id, UserSaveDto user) {
         User userFound = getOneSafe(id);
         userFound.setId(id);
-        if(user.getAddress() != null) userFound.setAddress(modelMapper.map(user.getAddress(), Address.class));
+        if(user.getAddress() != null) {
+            Address userFoundAddress = userFound.getAddress();
+            userFound.setAddress(modelMapper.map(user.getAddress(), Address.class));
+            if(userFoundAddress != null) {
+                addressRepository.deleteById(userFoundAddress.getId());
+            }
+        }
         if(user.getEmail() != null) userFound.setEmail(user.getEmail());
         if(user.getName() != null) userFound.setName(user.getName());
         if(user.getLastName() != null) userFound.setLastName(user.getLastName());
@@ -82,7 +91,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto findByLogin(String login) {
         Optional<User> userFound= userRepository.findByLogin(login);
-        return userFound.map(user -> modelMapper.map(user, UserDto.class)).orElse(null);
+        if(userFound.isPresent()) return userFound.map(user -> modelMapper.map(user, UserDto.class)).orElse(null);
+        else throw new UserNotFoundException("login");
+    }
+
+    @Override
+    public UserDto findById(int id) {
+        return modelMapper.map(getOneSafe(id), UserDto.class);
+    }
+
+    @Override
+    public UserDto findByEmail(String email) {
+        Optional<User> userFound= userRepository.findByEmail(email);
+        if(userFound.isPresent()) return modelMapper.map(userFound.get(), UserDto.class);
+        else throw new UserNotFoundException("email");
     }
 
     @Override
@@ -99,7 +121,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsById(id)) {
             return userRepository.getOne(id);
         } else {
-            throw new UserNotFoundException();
+            throw new UserNotFoundException("id");
         }
     }
 

@@ -24,6 +24,10 @@ public interface UserService {
 
     UserDto findByLogin(String login);
 
+    UserDto findById(int id);
+
+    UserDto findByEmail(String email);
+
     Boolean isExistsByLogin(String login);
 
     Boolean isExistsByEmail(String email);

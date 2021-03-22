@@ -20,13 +20,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {UserNotFoundException.class})
     protected ResponseEntity<Object> handleUserNotFound(RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "User not found with this id!";
-        return new ResponseEntity<>(bodyOfResponse, HttpStatus.BAD_REQUEST);
+        String bodyOfResponse = "User not found with this " + ex.getMessage() + "!";
+        return new ResponseEntity<>(bodyOfResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = {ConstraintViolationException.class})
     protected ResponseEntity<Object> handleInputNotValid(RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "One of field are not valid!";
+        String bodyOfResponse = "One of fields are not valid!";
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.BAD_REQUEST);
     }
 
