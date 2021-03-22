@@ -1,6 +1,5 @@
 package com.example.learningapplicationwithshop.model;
 
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,8 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,17 +25,16 @@ public class User {
     private int id;
 
     @NotBlank
-    @Column(name = "login")
+    @Column(name = "login", unique = true)
     private String login;
 
     @NotBlank
-    @Min(8)
     @Column(name = "password")
     private String password;
 
     @NotBlank
     @Email
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "name")
@@ -50,6 +48,7 @@ public class User {
     private Address address;
 
     @Column(name = "phone")
+    @Pattern(regexp = "^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$")
     private String phone;
 
     @OneToMany(cascade = CascadeType.ALL)
