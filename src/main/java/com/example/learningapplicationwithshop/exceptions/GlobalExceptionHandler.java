@@ -30,4 +30,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = {QuestionNotFoundException.class})
+    protected ResponseEntity<Object> handleQuestionNotFound(RuntimeException ex, WebRequest request) {
+        String bodyOfResponse = "Question not found with this " + ex.getMessage() + "!";
+        return new ResponseEntity<>(bodyOfResponse, HttpStatus.NOT_FOUND);
+    }
+
 }
