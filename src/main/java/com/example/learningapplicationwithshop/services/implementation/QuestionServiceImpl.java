@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +44,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @Transactional
     public void deleteQuestionById(int id) {
         if(questionRepository.findById(id).isPresent()) {
             questionRepository.deleteById(id);
@@ -52,6 +54,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @Transactional
     public QuestionDto updateQuestion(int id, QuestionDto updatedQuestion) {
         Question question = getOneSafe(id);
         if(updatedQuestion.getQuestionName() != null) question.setQuestionName(updatedQuestion.getQuestionName());
@@ -65,6 +68,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    @Transactional
     public QuestionDto addQuestion(QuestionDto newQuestion) {
         Question question = modelMapper.map(newQuestion, Question.class);
         question = questionRepository.save(question);
