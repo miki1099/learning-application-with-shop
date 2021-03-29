@@ -94,8 +94,8 @@ class QuestionServiceImplTest {
 
         QuestionDto expected = modelMapper.map(question1, QuestionDto.class);
 
-        Page<Question> pageResponse = new PageImpl(data);
-        lenient().when(questionRepository.findAll(PageRequest.of(0, AMOUNT))).thenReturn(pageResponse);
+        lenient().when(questionRepository.getSpecificAmount(AMOUNT)).thenReturn(data);
+        when(questionRepository.count()).thenReturn(3L);
 
         List<QuestionDto> result= questionService.getSpecificAmountOfQuestions(AMOUNT);
 
