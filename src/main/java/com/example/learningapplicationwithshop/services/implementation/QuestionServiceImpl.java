@@ -28,19 +28,15 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<QuestionDto> getSpecificAmountOfQuestions(int amount) {
         long questionAmount = questionRepository.count();
+        if (questionAmount < amount) throw new QuestionNotFoundException("this amount: "
+                + amount
+                + " actual amount: "
+                + questionAmount);
 
-        int page = (int) (Math.random() * questionAmount/amount);
-
-        Page<Question> questionPage = questionRepository.findAll(PageRequest.of(page, amount));
-
-        if(questionPage.hasContent()) {
-            return questionPage.getContent().stream()
+        List<Question> questions = questionRepository.getSpecificAmount(amount);
+        return questions.stream()
                     .map(question -> modelMapper.map(question, QuestionDto.class))
                     .collect(Collectors.toList());
-        }
-        else {
-            throw new QuestionNotFoundException("this amount: " + amount);
-        }
     }
 
     @Override
