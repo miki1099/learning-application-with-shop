@@ -19,12 +19,11 @@ import java.util.List;
 @AllArgsConstructor
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @RequestMapping(value = "/admin/users", params = {"page", "size"}, method = RequestMethod.GET)
     public List<UserDto> getAllUsers(@RequestParam("page") int page, @RequestParam("size") int size) {
-        List<UserDto> users = userService.getAllUsers(page, size);
-        return users;
+        return userService.getAllUsers(page, size);
     }
 
     @RequestMapping(value = "/admin/user/findByLastName/{lastName}", method = RequestMethod.GET)
