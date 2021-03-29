@@ -1,10 +1,12 @@
 package com.example.learningapplicationwithshop.services.implementation;
 
 import com.example.learningapplicationwithshop.exceptions.UserNotFoundException;
+import com.example.learningapplicationwithshop.model.Question;
 import com.example.learningapplicationwithshop.model.Role;
 import com.example.learningapplicationwithshop.model.User;
 import com.example.learningapplicationwithshop.model.dto.UserDto;
 import com.example.learningapplicationwithshop.model.dto.UserSaveDto;
+import com.example.learningapplicationwithshop.repositories.QuestionRepository;
 import com.example.learningapplicationwithshop.repositories.RoleRepository;
 import com.example.learningapplicationwithshop.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +38,9 @@ class UserServiceImplTest {
 
     @Mock
     private RoleRepository roleRepository;
+
+    @Mock
+    private QuestionRepository questionRepository;
 
     @Spy
     private final ModelMapper modelMapper = new ModelMapper();
@@ -179,6 +184,34 @@ class UserServiceImplTest {
         assertEquals(user1.getPassword(), foundUser.getPassword());
 
         verify(userRepository, times(1)).findByEmail(anyString());
+    }
+
+    @Test
+    void updateQuestionsLearnedTest() {
+        List<Integer> questionsIndexes = new ArrayList<>();
+        questionsIndexes.add(1);
+        questionsIndexes.add(2);
+
+        Question question1 = new Question();
+        question1.setId(1);
+        question1.setQuestionName("Question 1 name");
+        question1.setGoodAnswer("Good answer");
+        question1.setBadAnswer1("Bad answer");
+
+        Question question2 = new Question();
+        question2.setId(2);
+        question2.setQuestionName("Question 2 name");
+        question2.setGoodAnswer("Good 2 answer");
+        question2.setBadAnswer1("Bad 2 answer");
+
+        when(questionRepository.findAllById(questionsIndexes)).thenReturn(List.of(question1, question2));
+        lenient().when(userRepository.existsById(any())).thenReturn(true);
+        when(userRepository.getOne(any())).thenReturn(user1);
+
+        UserDto userReturned = userService.updateQuestionsLearned(1, questionsIndexes);
+
+        assertEquals(2, userReturned.getQuestionsLearned().size());
+
     }
 
 }

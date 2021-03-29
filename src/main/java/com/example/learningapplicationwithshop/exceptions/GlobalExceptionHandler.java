@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = {ConstraintViolationException.class})
+    @ExceptionHandler(value = {ConstraintViolationException.class, BadInputException.class})
     protected ResponseEntity<Object> handleInputNotValid(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "One of fields are not valid!";
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.BAD_REQUEST);

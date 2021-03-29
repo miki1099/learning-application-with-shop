@@ -1,5 +1,6 @@
 package com.example.learningapplicationwithshop.model.dto;
 
+import com.example.learningapplicationwithshop.model.Question;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,4 +35,5 @@ public class UserDto {
 
     Set<RoleDto> roles = new HashSet<>();
 
+    Set<QuestionDto> questionsLearned = new HashSet<>();
 }
