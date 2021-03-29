@@ -22,6 +22,8 @@ public interface UserService {
 
     UserDto updateUser(Integer id, UserSaveDto user);
 
+    UserDto updateQuestionsLearned(Integer id, List<Integer> indexes);
+
     UserDto findByLogin(String login);
 
     UserDto findById(int id);

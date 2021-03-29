@@ -57,4 +57,10 @@ public class UserController {
         return userService.updateUser(id, user);
     }
 
+    @RequestMapping(value = "/user/updateQuestionsLearned/{id}", method = RequestMethod.PUT)
+    public UserDto updateQuestionsLearned(@PathVariable Integer id,
+                                          @Valid @RequestBody List<Integer> questionsIndexes) {
+        return userService.updateQuestionsLearned(id, questionsIndexes);
+    }
+
 }

@@ -1,19 +1,19 @@
 package com.example.learningapplicationwithshop.services.implementation;
 
+import com.example.learningapplicationwithshop.exceptions.BadInputException;
 import com.example.learningapplicationwithshop.exceptions.UserNotFoundException;
 import com.example.learningapplicationwithshop.model.Address;
+import com.example.learningapplicationwithshop.model.Question;
 import com.example.learningapplicationwithshop.model.User;
 import com.example.learningapplicationwithshop.model.dto.UserDto;
 import com.example.learningapplicationwithshop.model.dto.UserSaveDto;
 import com.example.learningapplicationwithshop.repositories.AddressRepository;
+import com.example.learningapplicationwithshop.repositories.QuestionRepository;
 import com.example.learningapplicationwithshop.repositories.RoleRepository;
 import com.example.learningapplicationwithshop.repositories.UserRepository;
 import com.example.learningapplicationwithshop.services.UserService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -32,6 +32,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final AddressRepository addressRepository;
+    private final QuestionRepository questionRepository;
 
     private final ModelMapper modelMapper = new ModelMapper();
 
@@ -85,6 +86,24 @@ public class UserServiceImpl implements UserService {
         if(user.getName() != null) userFound.setName(user.getName());
         if(user.getLastName() != null) userFound.setLastName(user.getLastName());
         if(user.getPhone() != null) userFound.setPhone(user.getPhone());
+        return modelMapper.map(userFound, UserDto.class);
+    }
+
+    @Override
+    @Transactional
+    public UserDto updateQuestionsLearned(Integer id, List<Integer> indexes) {
+
+        if (indexes == null || indexes.isEmpty()) throw new BadInputException();
+        User userFound = getOneSafe(id);
+        userFound.setId(id);
+
+        Set<Question> questionsLearned = userFound.getQuestionsLearned();
+//        for (int questionIndex : indexes) {
+//            Optional<Question> questionFound = questionRepository.findById(questionIndex);
+//            questionFound.ifPresent(questionsLearned::add);
+//        }
+        questionsLearned.addAll(questionRepository.findAllById(indexes));
+        userFound.setQuestionsLearned(questionsLearned);
         return modelMapper.map(userFound, UserDto.class);
     }
 
