@@ -21,6 +21,8 @@ public class QuestionDto {
 
     private String badAnswer3;
 
+    private String category;
+
     public Byte[] picture;
 
 }

@@ -18,4 +18,8 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
     @Query(nativeQuery=true, value="SELECT *  FROM question ORDER BY rand() LIMIT :amount")
     List<Question> getSpecificAmount(@Param("amount") int amount);
 
+    Page<Question> findAllByCategory(String category, Pageable pageable);
+
+    long countByCategory(String category);
+
 }

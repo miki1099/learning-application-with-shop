@@ -3,6 +3,7 @@ package com.example.learningapplicationwithshop.controllers;
 import com.example.learningapplicationwithshop.model.dto.QuestionDto;
 import com.example.learningapplicationwithshop.services.QuestionService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,19 @@ public class QuestionController {
     @RequestMapping(value = "/question/update/{id}", method = RequestMethod.PUT)
     public QuestionDto updateQuestion(@Valid @RequestBody QuestionDto updateQuestion, @PathVariable int id) {
         return questionService.updateQuestion(id, updateQuestion);
+    }
+
+    @RequestMapping(value = "/question/getCountByCategory/{category}", method = RequestMethod.GET)
+    public int getQuestionsCountByCategory(@PathVariable String category, @Param("size") Integer size) {
+        if (size != null) return questionService.getQuestionsInCategoryCount(category, size);
+        else return questionService.getQuestionsInCategoryCount(category);
+    }
+
+    @RequestMapping(value = "/question/getByCategory/{category}", method = RequestMethod.GET)
+    public List<QuestionDto> getQuestionsByCategory(@PathVariable String category,
+                                                    @RequestParam("size") int size,
+                                                    @RequestParam("page") int page) {
+        return questionService.getQuestionsFromCategoryPage(page, size, category);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.learningapplicationwithshop.services.implementation;
 
+import com.example.learningapplicationwithshop.exceptions.BadInputException;
 import com.example.learningapplicationwithshop.exceptions.QuestionNotFoundException;
 import com.example.learningapplicationwithshop.model.Question;
 import com.example.learningapplicationwithshop.model.dto.QuestionDto;
@@ -35,14 +36,14 @@ public class QuestionServiceImpl implements QuestionService {
 
         List<Question> questions = questionRepository.getSpecificAmount(amount);
         return questions.stream()
-                    .map(question -> modelMapper.map(question, QuestionDto.class))
-                    .collect(Collectors.toList());
+                .map(question -> modelMapper.map(question, QuestionDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
     public void deleteQuestionById(int id) {
-        if(questionRepository.findById(id).isPresent()) {
+        if (questionRepository.findById(id).isPresent()) {
             questionRepository.deleteById(id);
         } else {
             throw new QuestionNotFoundException("id: " + id);
@@ -53,13 +54,13 @@ public class QuestionServiceImpl implements QuestionService {
     @Transactional
     public QuestionDto updateQuestion(int id, QuestionDto updatedQuestion) {
         Question question = getOneSafe(id);
-        if(updatedQuestion.getQuestionName() != null) question.setQuestionName(updatedQuestion.getQuestionName());
-        if(updatedQuestion.getGoodAnswer() != null) question.setGoodAnswer(updatedQuestion.getGoodAnswer());
-        if(updatedQuestion.getBadAnswer1() != null) question.setBadAnswer1(updatedQuestion.getBadAnswer1());
-        if(updatedQuestion.getBadAnswer2() != null) question.setBadAnswer2(updatedQuestion.getBadAnswer2());
-        if(updatedQuestion.getBadAnswer3() != null) question.setBadAnswer3(updatedQuestion.getBadAnswer3());
-        if(updatedQuestion.getPicture() != null) question.setPicture(updatedQuestion.getPicture());
-
+        if (updatedQuestion.getQuestionName() != null) question.setQuestionName(updatedQuestion.getQuestionName());
+        if (updatedQuestion.getGoodAnswer() != null) question.setGoodAnswer(updatedQuestion.getGoodAnswer());
+        if (updatedQuestion.getBadAnswer1() != null) question.setBadAnswer1(updatedQuestion.getBadAnswer1());
+        if (updatedQuestion.getBadAnswer2() != null) question.setBadAnswer2(updatedQuestion.getBadAnswer2());
+        if (updatedQuestion.getBadAnswer3() != null) question.setBadAnswer3(updatedQuestion.getBadAnswer3());
+        if (updatedQuestion.getPicture() != null) question.setPicture(updatedQuestion.getPicture());
+        if (updatedQuestion.getCategory() != null) question.setCategory(updatedQuestion.getCategory());
         return modelMapper.map(question, QuestionDto.class);
     }
 
@@ -83,10 +84,29 @@ public class QuestionServiceImpl implements QuestionService {
     //count pages from 0
     @Override
     public int getQuestionsPagesCount(int size) {
-
         long questionsRecord = questionRepository.count();
+        return questionsRecord == 0 ? -1 : (int) (questionsRecord - 1) / size;
+    }
 
-        return questionsRecord == 0 ? -1 : (int) ( questionsRecord - 1)/size;
+    @Override
+    public int getQuestionsInCategoryCount(String category) {
+        return (int) questionRepository.countByCategory(category);
+    }
+
+    @Override
+    public int getQuestionsInCategoryCount(String category, int size) {
+        if (size == 0) throw new BadInputException();
+        long questionsRecord = questionRepository.countByCategory(category);
+        return questionsRecord == 0 ? -1 : (int) (questionsRecord - 1) / size;
+    }
+
+    @Override
+    public List<QuestionDto> getQuestionsFromCategoryPage(int page, int size, String category) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        return questionRepository.findAllByCategory(category, pageable).getContent().stream()
+                .map(question -> modelMapper.map(question, QuestionDto.class))
+                .collect(Collectors.toList());
     }
 
     private Question getOneSafe(Integer id) {

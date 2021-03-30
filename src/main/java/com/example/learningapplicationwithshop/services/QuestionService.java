@@ -18,4 +18,10 @@ public interface QuestionService {
 
     int getQuestionsPagesCount(int size);
 
+    int getQuestionsInCategoryCount(String category);
+
+    int getQuestionsInCategoryCount(String category, int size);
+
+    List<QuestionDto> getQuestionsFromCategoryPage(int page, int size, String category);
+
 }
