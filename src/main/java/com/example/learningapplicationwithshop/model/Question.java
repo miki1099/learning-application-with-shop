@@ -29,14 +29,17 @@ public class Question {
     private String goodAnswer;
 
     @NotBlank
-    @Column(name = "abd_answer1")
+    @Column(name = "bad_answer1")
     private String badAnswer1;
 
-    @Column(name = "abd_answer2")
+    @Column(name = "bad_answer2")
     private String badAnswer2;
 
-    @Column(name = "abd_answer3")
+    @Column(name = "bad_answer3")
     private String badAnswer3;
+
+    @Column(name = "category")
+    private String category;
 
     @Column(name = "picture")
     @Lob
