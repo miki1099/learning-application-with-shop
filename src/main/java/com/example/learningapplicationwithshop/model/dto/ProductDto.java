@@ -1,16 +1,14 @@
 package com.example.learningapplicationwithshop.model.dto;
 
-import com.example.learningapplicationwithshop.model.Order;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.ManyToMany;
-import java.util.HashSet;
-import java.util.Set;
+import java.math.BigDecimal;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDto {
@@ -21,8 +19,9 @@ public class ProductDto {
 
     private String description;
 
-    private String price;
+    private BigDecimal price;
 
-    private Set<OrderDto> orders = new HashSet<>();
+    public Byte[] picture;
 
+    private Integer numberAvailable;
 }

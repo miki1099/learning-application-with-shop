@@ -21,7 +21,7 @@ public class Question {
     private int id;
 
     @NotBlank
-    @Column(name = "question_name")
+    @Column(name = "question_name", length = 400)
     private String questionName;
 
     @NotBlank
