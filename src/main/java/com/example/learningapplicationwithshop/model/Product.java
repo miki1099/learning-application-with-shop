@@ -6,9 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "product")
@@ -26,13 +24,16 @@ public class Product {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 3000)
     private String description;
 
     @Column(name = "price")
-    private String price;
+    private BigDecimal price;
 
-    @ManyToMany(mappedBy = "products")
-    private Set<Order> orders = new HashSet<>();
+    @Column(name = "picture")
+    @Lob
+    public Byte[] picture;
 
+    @Column(name = "number_available")
+    private Integer numberAvailable;
 }

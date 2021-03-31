@@ -36,4 +36,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = {NotFoundException.class})
+    protected ResponseEntity<Object> handleNotFound(RuntimeException ex, WebRequest request) {
+        String bodyOfResponse = ex.getMessage();
+        return new ResponseEntity<>(bodyOfResponse, HttpStatus.NOT_FOUND);
+    }
+
 }
