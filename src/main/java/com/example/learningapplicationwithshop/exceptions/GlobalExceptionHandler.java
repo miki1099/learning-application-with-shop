@@ -42,4 +42,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = {UserDoesNotHaveRequiredField.class, ProductOutOfStockException.class})
+    protected ResponseEntity<Object> userDoesNotHaveRequiredFieldsToPlaceOrder(RuntimeException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 }

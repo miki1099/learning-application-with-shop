@@ -1,17 +1,15 @@
 package com.example.learningapplicationwithshop.model.dto;
 
-import com.example.learningapplicationwithshop.model.Product;
 import com.example.learningapplicationwithshop.model.User;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.persistence.Access;
-import java.util.HashSet;
-import java.util.Set;
-
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDto {
@@ -20,8 +18,12 @@ public class OrderDto {
 
     private boolean isRealised;
 
-    private User user;
+    private UserWithoutOrdersDto user;
 
-    private Set<ProductDto> products = new HashSet<>();
+    private LocalDate createOrderDate;
+
+    private BigDecimal price;
+
+    private List<ProductDto> products = new ArrayList<>();
 
 }
