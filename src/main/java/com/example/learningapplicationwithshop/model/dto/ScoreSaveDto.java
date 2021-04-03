@@ -4,17 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ScoreDto {
-
-    private int id;
+public class ScoreSaveDto {
 
     private int score;
 
-    private LocalDate scoreDate;
-
+    private int userId;
 }
