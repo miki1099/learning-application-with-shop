@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -17,6 +18,8 @@ public class ScoreDto {
     private int id;
 
     private int score;
+
+    private LocalDate scoreDate;
 
     private UserDto userId;
 

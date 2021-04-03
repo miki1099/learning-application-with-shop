@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "score")
@@ -22,8 +23,10 @@ public class Score {
     @Column(name = "percentage_score")
     private int score;
 
+    @Column(name = "score_date")
+    private LocalDate scoreDate;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User userId;
-
 }
