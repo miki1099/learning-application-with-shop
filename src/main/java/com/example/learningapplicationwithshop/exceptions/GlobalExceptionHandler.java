@@ -8,6 +8,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import javax.validation.ConstraintViolationException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.format.DateTimeParseException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -45,5 +46,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {UserDoesNotHaveRequiredField.class, ProductOutOfStockException.class})
     protected ResponseEntity<Object> userDoesNotHaveRequiredFieldsToPlaceOrder(RuntimeException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(value = {DateTimeParseException.class})
+    protected ResponseEntity<Object> dateTimeParseExceptionHandler(RuntimeException ex) {
+        return new ResponseEntity<>("Bad date input format only legal YYYY-MM-DD", HttpStatus.BAD_REQUEST);
     }
 }
