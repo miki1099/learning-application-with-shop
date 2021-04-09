@@ -16,6 +16,9 @@ import javax.persistence.*;
 @Setter
 public class Role implements GrantedAuthority {
 
+    public static final String USER = "USER";
+    public static final String ADMIN = "ADMIN";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

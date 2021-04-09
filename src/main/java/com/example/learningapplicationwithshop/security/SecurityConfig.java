@@ -1,6 +1,7 @@
 package com.example.learningapplicationwithshop.security;
 
 import com.example.learningapplicationwithshop.exceptions.UserNotFoundException;
+import com.example.learningapplicationwithshop.model.Role;
 import com.example.learningapplicationwithshop.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -25,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserRepository userRepository;
+    private final JwtTokenFilter jwtTokenFilter;
 
     @Bean
     public PasswordEncoder encoder() {
@@ -78,9 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and();
 
         http.authorizeRequests()
-                // Our public endpoints
-                .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/register").permitAll()
+                .antMatchers(HttpMethod.POST, "/login", "/register").permitAll()
                 .antMatchers("/swagger-ui/index.html#/").permitAll()
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
@@ -89,7 +90,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui.html",
                         "/swagger-ui/**",
                         "/webjars/**").permitAll()
-                // Our private endpoints
+                .antMatchers("/admin/**").hasAuthority(Role.ADMIN)
                 .anyRequest().authenticated();
+
+        http.addFilterBefore(
+                jwtTokenFilter,
+                UsernamePasswordAuthenticationFilter.class
+        );
     }
 }
