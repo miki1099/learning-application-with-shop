@@ -69,6 +69,7 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserSaveDto user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User userSaved = userRepository.save(modelMapper.map(user, User.class));
+        userSaved.setEnabled(true);
         userSaved.setRoles(Set.of(roleRepository.getOne(1)));
         return modelMapper.map(userSaved, UserDto.class);
     }
@@ -127,6 +128,13 @@ public class UserServiceImpl implements UserService {
         Optional<User> userFound= userRepository.findByEmail(email);
         if(userFound.isPresent()) return modelMapper.map(userFound.get(), UserDto.class);
         else throw new UserNotFoundException("email");
+    }
+
+    @Override
+    public UserDto changeEnable(int id, boolean isEnable) {
+        User user = getOneSafe(id);
+        user.setEnabled(isEnable);
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override

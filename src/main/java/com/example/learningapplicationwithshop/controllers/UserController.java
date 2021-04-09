@@ -6,13 +6,8 @@ import com.example.learningapplicationwithshop.model.dto.UserLoginDto;
 import com.example.learningapplicationwithshop.model.dto.UserSaveDto;
 import com.example.learningapplicationwithshop.security.JwtTokenUtil;
 import com.example.learningapplicationwithshop.services.UserService;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -54,6 +48,11 @@ public class UserController {
     public ResponseEntity<UserDto> deleteUserById(@PathVariable Integer id) {
         userService.deleteUserById(id);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @RequestMapping(value = "/admin/user/changeEnable/{userId}", method = RequestMethod.PUT)
+    public UserDto changeUserEnable(@PathVariable int userId, boolean isEnable) {
+        return userService.changeEnable(userId, isEnable);
     }
 
     @RequestMapping(value = "/register",method = RequestMethod.POST)
