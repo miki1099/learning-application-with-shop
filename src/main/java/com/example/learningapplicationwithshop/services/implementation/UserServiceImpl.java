@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -34,6 +35,7 @@ public class UserServiceImpl implements UserService {
     private final AddressRepository addressRepository;
     private final QuestionRepository questionRepository;
 
+    private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper = new ModelMapper();
 
     @Override
@@ -65,6 +67,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto createUser(UserSaveDto user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User userSaved = userRepository.save(modelMapper.map(user, User.class));
         userSaved.setRoles(Set.of(roleRepository.getOne(1)));
         return modelMapper.map(userSaved, UserDto.class);
