@@ -1,13 +1,12 @@
 package com.example.learningapplicationwithshop.services;
 
 import com.example.learningapplicationwithshop.model.dto.ScoreDto;
-import com.example.learningapplicationwithshop.model.dto.ScoreSaveDto;
 
 import java.util.List;
 
 public interface ScoreService {
 
-    ScoreDto create(ScoreSaveDto scoreSaveDto);
+    ScoreDto create(int userId, int score);
 
     List<ScoreDto> getAllUserScoreOrderByDateAsc(int page, int size, int userId);
 

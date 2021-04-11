@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -60,20 +62,20 @@ public class UserController {
         return userService.createUser(user);
     }
 
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-    public UserDto getUserById(@PathVariable Integer id) {
-        return userService.findById(id);
+    @RequestMapping(value = "/user/me", method = RequestMethod.GET)
+    public UserDto getUserById(Principal principal) {
+        return userService.findByLogin(principal.getName());
     }
 
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
-    public UserDto update(@PathVariable Integer id, @Valid @RequestBody UserSaveDto user) {
-        return userService.updateUser(id, user);
+    @RequestMapping(value = "/user/me", method = RequestMethod.PUT)
+    public UserDto update(@Valid @RequestBody UserSaveDto user, Principal principal) {
+        return userService.updateUser(getPrincipalUserId(principal), user);
     }
 
-    @RequestMapping(value = "/user/updateQuestionsLearned/{id}", method = RequestMethod.PUT)
-    public UserDto updateQuestionsLearned(@PathVariable Integer id,
+    @RequestMapping(value = "/user/updateQuestionsLearned/me", method = RequestMethod.PUT)
+    public UserDto updateQuestionsLearned(Principal principal,
                                           @Valid @RequestBody List<Integer> questionsIndexes) {
-        return userService.updateQuestionsLearned(id, questionsIndexes);
+        return userService.updateQuestionsLearned(getPrincipalUserId(principal), questionsIndexes);
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -97,4 +99,9 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+
+    private int getPrincipalUserId(Principal principal) {
+        return userService.findByLogin(principal.getName()).getId();
+    }
+
 }
