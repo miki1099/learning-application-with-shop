@@ -65,6 +65,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http = http.csrf().disable();
 
+        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
+
         http = http
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
