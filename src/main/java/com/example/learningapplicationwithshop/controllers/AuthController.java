@@ -20,6 +20,7 @@ import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:8080")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
