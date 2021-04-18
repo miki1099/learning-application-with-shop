@@ -8,12 +8,15 @@
 - JWT
 
 ## REST API
-
+### Link to swagger
+https://rocky-brook-69170.herokuapp.com/swagger-ui/index.html#/
+### API URL
+https://rocky-brook-69170.herokuapp.com/
 ## Login to app
 ### Request
 `POST /login`
 
-    curl -X POST "http://localhost:8081/login" -H "accept: */*" -H "Content-Type: application/json" -d "{ \"login\": \"string\", \"password\": \"string\"}"
+    curl -X POST "http://rocky-brook-69170.herokuapp.com/login" -H "accept: */*" -H "Content-Type: application/json" -d "{ \"login\": \"string\", \"password\": \"string\"}"
     
 ### Response
 ##### Body:
