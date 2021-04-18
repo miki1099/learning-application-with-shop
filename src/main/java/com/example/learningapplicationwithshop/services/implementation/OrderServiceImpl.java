@@ -51,12 +51,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto createOrder(OrderCreateDto createdOrder) {
+    public OrderDto createOrder(int userId, OrderCreateDto createdOrder) {
         List<Integer> productsId = createdOrder.getProductsIds();
         if(productsId == null || productsId.size() == 0) throw new NotFoundException("No products were found!");
 
         List<Product> products = productRepository.findAllById(productsId);
-        User orderUser = getUserSafe(createdOrder.getUserId());
+        User orderUser = getUserSafe(userId);
         userChecker(orderUser);
         BigDecimal orderPrice = BigDecimal.ZERO;
         for (Product product : products) {

@@ -4,7 +4,6 @@ import com.example.learningapplicationwithshop.exceptions.UserNotFoundException;
 import com.example.learningapplicationwithshop.model.Score;
 import com.example.learningapplicationwithshop.model.User;
 import com.example.learningapplicationwithshop.model.dto.ScoreDto;
-import com.example.learningapplicationwithshop.model.dto.ScoreSaveDto;
 import com.example.learningapplicationwithshop.repositories.ScoreRepository;
 import com.example.learningapplicationwithshop.repositories.UserRepository;
 import com.example.learningapplicationwithshop.services.ScoreService;
@@ -29,10 +28,10 @@ public class ScoreServiceImpl implements ScoreService {
 
     @Override
     @Transactional
-    public ScoreDto create(ScoreSaveDto scoreSaveDto) {
-        User user = findUserSafe(scoreSaveDto.getUserId());
+    public ScoreDto create(int userId, int score) {
+        User user = findUserSafe(userId);
         Score scoreToSave = new Score();
-        scoreToSave.setScore(scoreSaveDto.getScore());
+        scoreToSave.setScore(score);
         scoreToSave.setUserId(user);
         scoreToSave.setScoreDate(LocalDate.now());
         return modelMapper.map(scoreRepository.save(scoreToSave), ScoreDto.class);

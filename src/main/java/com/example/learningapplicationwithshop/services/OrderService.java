@@ -12,7 +12,7 @@ public interface OrderService {
 
     int getAllOrdersPageCount(int size);
 
-    OrderDto createOrder(OrderCreateDto createdOrder);
+    OrderDto createOrder(int userId, OrderCreateDto createdOrder);
 
     OrderDto changeOrdersRealisation(int id, boolean isRealised);
 

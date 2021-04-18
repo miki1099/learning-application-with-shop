@@ -3,11 +3,13 @@ package com.example.learningapplicationwithshop.controllers;
 import com.example.learningapplicationwithshop.model.dto.OrderCreateDto;
 import com.example.learningapplicationwithshop.model.dto.OrderDto;
 import com.example.learningapplicationwithshop.services.OrderService;
+import com.example.learningapplicationwithshop.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,6 +18,7 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final UserService userService;
 
     @RequestMapping(value = "/admin/order/getAll", method = RequestMethod.GET)
     public List<OrderDto> getAllOrdersPaged(@RequestParam int page, @RequestParam int size) {
@@ -33,8 +36,8 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/order/create", method = RequestMethod.POST)
-    public OrderDto createOrder(@RequestBody OrderCreateDto orderCreateDto) {
-        return orderService.createOrder(orderCreateDto);
+    public OrderDto createOrder(@RequestBody OrderCreateDto orderCreateDto, Principal principal) {
+        return orderService.createOrder(getPrincipalUserId(principal), orderCreateDto);
     }
 
     @RequestMapping(value = "/admin/order/findAllCreatedBetween", method = RequestMethod.GET)
@@ -74,5 +77,9 @@ public class OrderController {
     @RequestMapping(value = "/admin/order/findAllInProgressCount", method = RequestMethod.GET)
     public int findAllByUserId(@RequestParam int size) {
         return orderService.findAllOrdersInProgressPagesCount(size);
+    }
+
+    private int getPrincipalUserId(Principal principal) {
+        return userService.findByLogin(principal.getName()).getId();
     }
 }

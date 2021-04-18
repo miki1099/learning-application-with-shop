@@ -30,6 +30,8 @@ public interface UserService {
 
     UserDto findByEmail(String email);
 
+    UserDto changeEnable(int id, boolean isEnable);
+
     Boolean isExistsByLogin(String login);
 
     Boolean isExistsByEmail(String email);

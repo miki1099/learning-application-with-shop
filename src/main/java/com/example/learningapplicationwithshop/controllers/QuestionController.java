@@ -32,18 +32,18 @@ public class QuestionController {
         return questionService.getQuestionsPagesCount(size);
     }
 
-    @RequestMapping(value = "/question/delete/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/admin/question/delete/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<QuestionDto> deleteQuestionById(@PathVariable int id) {
         questionService.deleteQuestionById(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @RequestMapping(value = "/question/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/admin/question/create", method = RequestMethod.POST)
     public QuestionDto createQuestion(@Valid @RequestBody QuestionDto newQuestion) {
         return questionService.addQuestion(newQuestion);
     }
 
-    @RequestMapping(value = "/question/update/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/admin/question/update/{id}", method = RequestMethod.PUT)
     public QuestionDto updateQuestion(@Valid @RequestBody QuestionDto updateQuestion, @PathVariable int id) {
         return questionService.updateQuestion(id, updateQuestion);
     }

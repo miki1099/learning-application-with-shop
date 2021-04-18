@@ -12,8 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderCreateDto {
 
-    private int userId;
-
     private List<Integer> productsIds = new ArrayList<>();
 
 }

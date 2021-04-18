@@ -1,23 +1,21 @@
 package com.example.learningapplicationwithshop.controllers;
 
-import com.example.learningapplicationwithshop.model.User;
 import com.example.learningapplicationwithshop.model.dto.UserDto;
 import com.example.learningapplicationwithshop.model.dto.UserSaveDto;
 import com.example.learningapplicationwithshop.services.UserService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
 public class UserController {
+
 
     private final UserService userService;
 
@@ -42,25 +40,34 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @RequestMapping(value = "/user/register",method = RequestMethod.POST)
+    @RequestMapping(value = "/admin/user/changeEnable/{userId}", method = RequestMethod.PUT)
+    public UserDto changeUserEnable(@PathVariable int userId, boolean isEnable) {
+        return userService.changeEnable(userId, isEnable);
+    }
+
+    @RequestMapping(value = "/register",method = RequestMethod.POST)
     public UserDto create(@Valid @RequestBody UserSaveDto user) {
         return userService.createUser(user);
     }
 
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-    public UserDto getUserById(@PathVariable Integer id) {
-        return userService.findById(id);
+    @RequestMapping(value = "/user/me", method = RequestMethod.GET)
+    public UserDto getUserById(Principal principal) {
+        return userService.findByLogin(principal.getName());
     }
 
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
-    public UserDto update(@PathVariable Integer id, @Valid @RequestBody UserSaveDto user) {
-        return userService.updateUser(id, user);
+    @RequestMapping(value = "/user/me", method = RequestMethod.PUT)
+    public UserDto update(@Valid @RequestBody UserSaveDto user, Principal principal) {
+        return userService.updateUser(getPrincipalUserId(principal), user);
     }
 
-    @RequestMapping(value = "/user/updateQuestionsLearned/{id}", method = RequestMethod.PUT)
-    public UserDto updateQuestionsLearned(@PathVariable Integer id,
+    @RequestMapping(value = "/user/updateQuestionsLearned/me", method = RequestMethod.PUT)
+    public UserDto updateQuestionsLearned(Principal principal,
                                           @Valid @RequestBody List<Integer> questionsIndexes) {
-        return userService.updateQuestionsLearned(id, questionsIndexes);
+        return userService.updateQuestionsLearned(getPrincipalUserId(principal), questionsIndexes);
+    }
+
+    private int getPrincipalUserId(Principal principal) {
+        return userService.findByLogin(principal.getName()).getId();
     }
 
 }
