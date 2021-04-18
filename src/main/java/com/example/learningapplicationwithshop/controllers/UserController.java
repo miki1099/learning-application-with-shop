@@ -1,21 +1,11 @@
 package com.example.learningapplicationwithshop.controllers;
 
-import com.example.learningapplicationwithshop.model.User;
 import com.example.learningapplicationwithshop.model.dto.UserDto;
-import com.example.learningapplicationwithshop.model.dto.UserLoginDto;
 import com.example.learningapplicationwithshop.model.dto.UserSaveDto;
-import com.example.learningapplicationwithshop.security.JwtTokenUtil;
 import com.example.learningapplicationwithshop.services.UserService;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,10 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 public class UserController {
 
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenUtil jwtTokenUtil;
+
     private final UserService userService;
-    private final ModelMapper modelMapper;
 
     @RequestMapping(value = "/admin/users", params = {"page", "size"}, method = RequestMethod.GET)
     public List<UserDto> getAllUsers(@RequestParam("page") int page, @RequestParam("size") int size) {
@@ -76,28 +64,6 @@ public class UserController {
     public UserDto updateQuestionsLearned(Principal principal,
                                           @Valid @RequestBody List<Integer> questionsIndexes) {
         return userService.updateQuestionsLearned(getPrincipalUserId(principal), questionsIndexes);
-    }
-
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<UserDto> login(@RequestBody UserLoginDto user) {
-        try {
-            Authentication authenticate = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            user.getLogin(), user.getPassword()
-                    )
-            );
-            User userAuth = (User) authenticate.getPrincipal();
-
-            return ResponseEntity.ok()
-                    .header(
-                            HttpHeaders.AUTHORIZATION,
-                            jwtTokenUtil.generateAccessToken(userAuth)
-                    )
-                    .body(modelMapper.map(userAuth, UserDto.class));
-
-        } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
     }
 
     private int getPrincipalUserId(Principal principal) {
