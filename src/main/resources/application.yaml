@@ -6,7 +6,7 @@ spring:
       password: Test1234
       name: user
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/learning_application_DB?serverTimezone=CET
+    url: jdbc:mysql://127.0.0.1:3306/learning_application_DB?serverTimezone=CET&createDatabaseIfNotExist=true
     username: root
     password: root1234
     driverClassName: com.mysql.cj.jdbc.Driver
@@ -14,7 +14,7 @@ spring:
     show-sql: true
     hibernate:
       dialect: org.hibernate.dialect.MySQL5Dialect
-      dll-auto: verify
+      dll-auto: update
     properties:
       hibernate:
         format_sql: true
