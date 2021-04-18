@@ -35,6 +35,7 @@ public class OrderController {
         return orderService.changeOrdersRealisation(id, isRealised);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/order/create", method = RequestMethod.POST)
     public OrderDto createOrder(@RequestBody OrderCreateDto orderCreateDto, Principal principal) {
         return orderService.createOrder(getPrincipalUserId(principal), orderCreateDto);

@@ -45,6 +45,7 @@ public class UserController {
         return userService.changeEnable(userId, isEnable);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public UserDto create(@Valid @RequestBody UserSaveDto user) {
         return userService.createUser(user);

@@ -38,6 +38,7 @@ public class QuestionController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/admin/question/create", method = RequestMethod.POST)
     public QuestionDto createQuestion(@Valid @RequestBody QuestionDto newQuestion) {
         return questionService.addQuestion(newQuestion);

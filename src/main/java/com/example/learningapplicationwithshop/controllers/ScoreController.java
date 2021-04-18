@@ -4,6 +4,7 @@ import com.example.learningapplicationwithshop.model.dto.ScoreDto;
 import com.example.learningapplicationwithshop.services.implementation.ScoreServiceImpl;
 import com.example.learningapplicationwithshop.services.implementation.UserServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -25,6 +26,7 @@ public class ScoreController {
         return scoreService.getAvgScoreAllUsers();
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/score/create/{score}", method = RequestMethod.POST)
     public ScoreDto createScore(@PathVariable int score, Principal principal) {
         return scoreService.create(getPrincipalUserId(principal), score);

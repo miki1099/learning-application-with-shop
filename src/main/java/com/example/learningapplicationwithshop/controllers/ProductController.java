@@ -17,6 +17,7 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/admin/product/create", method = RequestMethod.POST)
     public ProductDto createProduct(@Valid @RequestBody ProductDto productDto) {
         return productService.create(productDto);
