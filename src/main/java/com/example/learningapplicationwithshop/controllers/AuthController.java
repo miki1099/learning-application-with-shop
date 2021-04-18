@@ -1,12 +1,10 @@
 package com.example.learningapplicationwithshop.controllers;
 
 import com.example.learningapplicationwithshop.model.User;
-import com.example.learningapplicationwithshop.model.dto.UserDto;
 import com.example.learningapplicationwithshop.model.dto.UserLoginDto;
+import com.example.learningapplicationwithshop.model.dto.UserLoginReturnDto;
 import com.example.learningapplicationwithshop.security.JwtTokenUtil;
-import com.example.learningapplicationwithshop.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +23,9 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
-    private final ModelMapper modelMapper;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<UserDto> login(@RequestBody UserLoginDto user) {
+    public ResponseEntity<UserLoginReturnDto> login(@RequestBody UserLoginDto user) {
         try {
             Authentication authenticate = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -36,13 +33,16 @@ public class AuthController {
                     )
             );
             User userAuth = (User) authenticate.getPrincipal();
+            UserLoginReturnDto userReturn = new UserLoginReturnDto();
+            userReturn.setLogin(userAuth.getLogin());
+            userReturn.setToken(jwtTokenUtil.generateAccessToken(userAuth));
 
             return ResponseEntity.ok()
                     .header(
                             HttpHeaders.AUTHORIZATION,
                             jwtTokenUtil.generateAccessToken(userAuth)
                     )
-                    .body(modelMapper.map(userAuth, UserDto.class));
+                    .body(userReturn);
 
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -50,13 +50,13 @@ public class AuthController {
     }
 
     @PostMapping(value = "/refreshToken")
-    public ResponseEntity<UserDto> refreshToken(Principal principal) {
+    public ResponseEntity<UserLoginReturnDto> refreshToken(Principal principal) {
         User userAuth = (User) principal;
+        UserLoginReturnDto userReturn = new UserLoginReturnDto();
+        userReturn.setLogin(userAuth.getLogin());
+        userReturn.setToken(jwtTokenUtil.generateAccessToken(userAuth));
+
         return ResponseEntity.ok()
-                .header(
-                        HttpHeaders.AUTHORIZATION,
-                        jwtTokenUtil.generateAccessToken(userAuth)
-                )
-                .body(modelMapper.map(userAuth, UserDto.class));
+                .body(userReturn);
     }
 }
