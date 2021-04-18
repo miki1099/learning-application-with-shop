@@ -6,9 +6,9 @@ spring:
       password: Test1234
       name: user
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/learning_application_DB?serverTimezone=CET&createDatabaseIfNotExist=true
-    username: root
-    password: root1234
+    url: jdbc:mysql://remotemysql.com/sF26fF66k5?serverTimezone=CET&createDatabaseIfNotExist=true
+    username: sF26fF66k5
+    password: nrDLvi1vXZ
     driverClassName: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true
