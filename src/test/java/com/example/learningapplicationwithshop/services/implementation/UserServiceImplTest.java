@@ -124,7 +124,6 @@ class UserServiceImplTest {
 
         assertEquals(user1.getId(), foundUser.getId());
         assertEquals(user1.getLastName(), foundUser.getLastName());
-        assertEquals(user1.getPassword(), foundUser.getPassword());
 
         verify(userRepository, times(1)).findFirstByLastName(anyString());
 
@@ -171,7 +170,6 @@ class UserServiceImplTest {
 
         assertEquals(user1.getId(), foundUser.getId());
         assertEquals(user1.getLastName(), foundUser.getLastName());
-        assertEquals(user1.getPassword(), foundUser.getPassword());
 
         verify(userRepository, times(1)).findByLogin(anyString());
 
@@ -186,7 +184,6 @@ class UserServiceImplTest {
 
         assertEquals(user1.getId(), foundUser.getId());
         assertEquals(user1.getLastName(), foundUser.getLastName());
-        assertEquals(user1.getPassword(), foundUser.getPassword());
 
         verify(userRepository, times(1)).findByEmail(anyString());
     }
