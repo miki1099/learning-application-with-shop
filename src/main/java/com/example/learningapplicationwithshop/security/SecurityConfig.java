@@ -23,6 +23,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 
 @EnableWebSecurity
 @AllArgsConstructor
@@ -54,6 +55,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("https://example.com"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(username -> userRepository
@@ -65,7 +76,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http = http.csrf().disable();
 
-        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
+        CorsConfiguration conf = new CorsConfiguration().applyPermitDefaultValues();
+        conf.addAllowedMethod(HttpMethod.PUT);
+        http.cors().configurationSource(request -> conf);
 
         http = http
                 .sessionManagement()
