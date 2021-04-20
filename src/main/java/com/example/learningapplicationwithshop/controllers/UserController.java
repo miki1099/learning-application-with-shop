@@ -1,5 +1,6 @@
 package com.example.learningapplicationwithshop.controllers;
 
+import com.example.learningapplicationwithshop.model.dto.PasswordDto;
 import com.example.learningapplicationwithshop.model.dto.UserDto;
 import com.example.learningapplicationwithshop.model.dto.UserSaveDto;
 import com.example.learningapplicationwithshop.services.UserService;
@@ -60,6 +61,11 @@ public class UserController {
     @RequestMapping(value = "/user/me", method = RequestMethod.PUT)
     public UserDto update(@Valid @RequestBody UserSaveDto user, Principal principal) {
         return userService.updateUser(getPrincipalUserId(principal), user);
+    }
+
+    @PutMapping(value = "/user/me/changePassword")
+    public UserDto changePassword(@RequestBody PasswordDto passwordDto, Principal principal) {
+        return userService.changePassword(getPrincipalUserId(principal), passwordDto);
     }
 
     @RequestMapping(value = "/user/updateQuestionsLearned/me", method = RequestMethod.PUT)

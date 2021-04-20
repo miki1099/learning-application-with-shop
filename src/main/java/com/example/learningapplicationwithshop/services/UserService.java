@@ -2,6 +2,7 @@ package com.example.learningapplicationwithshop.services;
 
 
 import com.example.learningapplicationwithshop.model.User;
+import com.example.learningapplicationwithshop.model.dto.PasswordDto;
 import com.example.learningapplicationwithshop.model.dto.UserDto;
 import com.example.learningapplicationwithshop.model.dto.UserSaveDto;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,8 @@ public interface UserService {
     UserDto findByEmail(String email);
 
     UserDto changeEnable(int id, boolean isEnable);
+
+    UserDto changePassword(int id, PasswordDto passwordDto);
 
     Boolean isExistsByLogin(String login);
 

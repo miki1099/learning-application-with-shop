@@ -1,10 +1,12 @@
 package com.example.learningapplicationwithshop.services.implementation;
 
 import com.example.learningapplicationwithshop.exceptions.BadInputException;
+import com.example.learningapplicationwithshop.exceptions.PasswordDoesNotMatchException;
 import com.example.learningapplicationwithshop.exceptions.UserNotFoundException;
 import com.example.learningapplicationwithshop.model.Address;
 import com.example.learningapplicationwithshop.model.Question;
 import com.example.learningapplicationwithshop.model.User;
+import com.example.learningapplicationwithshop.model.dto.PasswordDto;
 import com.example.learningapplicationwithshop.model.dto.UserDto;
 import com.example.learningapplicationwithshop.model.dto.UserSaveDto;
 import com.example.learningapplicationwithshop.repositories.AddressRepository;
@@ -135,6 +137,18 @@ public class UserServiceImpl implements UserService {
         User user = getOneSafe(id);
         user.setEnabled(isEnable);
         return modelMapper.map(user, UserDto.class);
+    }
+
+    @Override
+    @Transactional
+    public UserDto changePassword(int id, PasswordDto passwordDto) {
+        User userFound = getOneSafe(id);
+        userFound.setId(id);
+        if(!userFound.getPassword().equals(passwordEncoder.encode(passwordDto.getOldPassword()))) {
+            throw new PasswordDoesNotMatchException();
+        }
+        userFound.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
+        return modelMapper.map(userFound, UserDto.class);
     }
 
     @Override

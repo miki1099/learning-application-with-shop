@@ -52,4 +52,9 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<Object> dateTimeParseExceptionHandler(RuntimeException ex) {
         return new ResponseEntity<>("Bad date input format only legal YYYY-MM-DD", HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = {PasswordDoesNotMatchException.class})
+    protected ResponseEntity<Object> passwordDoesNotMatchExceptionHandler(RuntimeException ex) {
+        return new ResponseEntity<>("Passwords does not match!", HttpStatus.UNAUTHORIZED);
+    }
 }
