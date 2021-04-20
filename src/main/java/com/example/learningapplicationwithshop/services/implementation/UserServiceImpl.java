@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
     public UserDto changePassword(int id, PasswordDto passwordDto) {
         User userFound = getOneSafe(id);
         userFound.setId(id);
-        if(!userFound.getPassword().equals(passwordEncoder.encode(passwordDto.getOldPassword()))) {
+        if(!passwordEncoder.matches(passwordDto.getOldPassword(), userFound.getPassword())) {
             throw new PasswordDoesNotMatchException();
         }
         userFound.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));

@@ -1,19 +1,12 @@
 package com.example.learningapplicationwithshop.controllers;
 
-import com.example.learningapplicationwithshop.model.User;
 import com.example.learningapplicationwithshop.model.dto.PasswordDto;
 import com.example.learningapplicationwithshop.model.dto.UserDto;
-import com.example.learningapplicationwithshop.model.dto.UserLoginReturnDto;
 import com.example.learningapplicationwithshop.model.dto.UserSaveDto;
 import com.example.learningapplicationwithshop.services.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,7 +20,6 @@ public class UserController {
 
 
     private final UserService userService;
-    private final AuthenticationManager authenticationManager;
 
     @RequestMapping(value = "/admin/users", params = {"page", "size"}, method = RequestMethod.GET)
     public List<UserDto> getAllUsers(@RequestParam("page") int page, @RequestParam("size") int size) {
@@ -72,20 +64,8 @@ public class UserController {
     }
 
     @PutMapping(value = "/user/me/changePassword")
-    public ResponseEntity<UserDto> changePassword(@RequestBody PasswordDto passwordDto, Principal principal) {
-        try {
-            Authentication authenticate = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            principal.getName(), passwordDto.getOldPassword()
-                    )
-            );
-
-            return ResponseEntity.ok()
-                    .body(userService.changePassword(getPrincipalUserId(principal), passwordDto));
-
-        } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public UserDto changePassword(@RequestBody PasswordDto passwordDto, Principal principal) {
+        return userService.changePassword(getPrincipalUserId(principal), passwordDto);
     }
 
     @RequestMapping(value = "/user/updateQuestionsLearned/me", method = RequestMethod.PUT)
