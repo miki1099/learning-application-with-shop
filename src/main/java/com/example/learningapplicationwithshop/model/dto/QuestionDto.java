@@ -23,6 +23,6 @@ public class QuestionDto {
 
     private String category;
 
-    public Byte[] picture;
+    public String picture;
 
 }

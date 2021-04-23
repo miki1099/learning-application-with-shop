@@ -42,7 +42,6 @@ public class Question {
     private String category;
 
     @Column(name = "picture")
-    @Lob
-    public Byte[] picture;
+    public String picture;
 
 }
