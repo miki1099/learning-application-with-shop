@@ -9,9 +9,9 @@
 
 ## REST API
 ### Link to swagger
-https://rocky-brook-69170.herokuapp.com/swagger-ui/index.html#/
+https://learning-app-stars.herokuapp.com/swagger-ui/index.html#/
 ### API URL
-https://rocky-brook-69170.herokuapp.com/
+https://learning-app-stars.herokuapp.com/
 ## Login to app
 ### Request
 `POST /login`
