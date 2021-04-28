@@ -29,8 +29,8 @@ public class ScoreController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/score/create/{score}", method = RequestMethod.POST)
-    public ScoreDto createScore(@PathVariable int score, Principal principal) {
-        return scoreService.create(getPrincipalUserId(principal), score);
+    public ScoreDto createScore(@PathVariable int score, Principal principal, @RequestParam String category) {
+        return scoreService.create(getPrincipalUserId(principal), score, category);
     }
 
     @RequestMapping(value = "/score/userScoreByDate", method = RequestMethod.GET)

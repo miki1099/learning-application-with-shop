@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ScoreService {
 
-    ScoreDto create(int userId, int score);
+    ScoreDto create(int userId, int score, String category);
 
     List<ScoreDto> getAllUserScoreOrderByDateAsc(int page, int size, int userId);
 

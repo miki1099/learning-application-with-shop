@@ -17,4 +17,5 @@ public class ScoreDto {
 
     private LocalDate scoreDate;
 
+    private String category;
 }

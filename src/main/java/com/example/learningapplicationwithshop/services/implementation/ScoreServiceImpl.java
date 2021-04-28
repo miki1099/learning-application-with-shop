@@ -28,12 +28,13 @@ public class ScoreServiceImpl implements ScoreService {
 
     @Override
     @Transactional
-    public ScoreDto create(int userId, int score) {
+    public ScoreDto create(int userId, int score, String category) {
         User user = findUserSafe(userId);
         Score scoreToSave = new Score();
         scoreToSave.setScore(score);
         scoreToSave.setUserId(user);
         scoreToSave.setScoreDate(LocalDate.now());
+        scoreToSave.setCategory(category);
         return modelMapper.map(scoreRepository.save(scoreToSave), ScoreDto.class);
     }
 
