@@ -22,5 +22,3 @@ spring:
     generate-ddl: true
   messages:
     basename: messages/messages
-server:
-  port: 8081
