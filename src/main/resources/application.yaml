@@ -6,9 +6,9 @@ spring:
       password: Test1234
       name: user
   datasource:
-    url: jdbc:mysql://remotemysql.com/sF26fF66k5?serverTimezone=CET&createDatabaseIfNotExist=true
-    username: sF26fF66k5
-    password: nrDLvi1vXZ
+    url: jdbc:mysql://eu-cdbr-west-01.cleardb.com/heroku_45ffe98c65636d2?reconnect=true
+    username: b76ab84075684e
+    password: f6ebd6c9
     driverClassName: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true
@@ -23,4 +23,4 @@ spring:
   messages:
     basename: messages/messages
 server:
-  port: ${PORT:8080}
+  port: 8080
