@@ -25,6 +25,8 @@ public interface UserService {
 
     UserDto updateQuestionsLearned(Integer id, List<Integer> indexes);
 
+    UserDto resetQuestionLearned(String login);
+
     UserDto findByLogin(String login);
 
     UserDto findById(int id);
@@ -38,5 +40,4 @@ public interface UserService {
     Boolean isExistsByLogin(String login);
 
     Boolean isExistsByEmail(String email);
-
 }

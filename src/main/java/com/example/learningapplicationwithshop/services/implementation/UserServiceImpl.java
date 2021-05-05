@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -111,6 +112,14 @@ public class UserServiceImpl implements UserService {
         questionsLearned.addAll(questionRepository.findAllById(indexes));
         userFound.setQuestionsLearned(questionsLearned);
         return modelMapper.map(userFound, UserDto.class);
+    }
+
+    @Override
+    @Transactional
+    public UserDto resetQuestionLearned(String login) {
+        User user = userRepository.findByLogin(login).orElseThrow(() -> new UserNotFoundException("User with login: " + login + " not found"));
+        user.setQuestionsLearned(new HashSet<>());
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override

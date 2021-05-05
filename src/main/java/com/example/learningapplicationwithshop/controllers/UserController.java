@@ -58,6 +58,12 @@ public class UserController {
         return userService.findByLogin(principal.getName());
     }
 
+    @PutMapping(value = "/user/resetQuestions")
+    public UserDto resetUserQuestionsLearned (Principal principal) {
+        return userService.resetQuestionLearned(principal.getName());
+    }
+
+
     @RequestMapping(value = "/user/me", method = RequestMethod.PUT)
     public UserDto update(@Valid @RequestBody UserSaveDto user, Principal principal) {
         return userService.updateUser(getPrincipalUserId(principal), user);
