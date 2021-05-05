@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -63,4 +64,8 @@ public class QuestionController {
         return questionService.getQuestionsFromCategoryPage(page, size, category);
     }
 
+    @GetMapping(value = "/questions/getNotLearned")
+    public List<QuestionDto> getQuestionsNotLearned(@Param("category") String category, @RequestParam int amount , Principal principal) {
+        return questionService.getQuestionsNotLearned(principal.getName(), amount, category);
+    }
 }

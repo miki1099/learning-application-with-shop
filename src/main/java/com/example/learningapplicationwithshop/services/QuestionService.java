@@ -24,4 +24,5 @@ public interface QuestionService {
 
     List<QuestionDto> getQuestionsFromCategoryPage(int page, int size, String category);
 
+    List<QuestionDto> getQuestionsNotLearned(String userLogin, int amount, String category);
 }

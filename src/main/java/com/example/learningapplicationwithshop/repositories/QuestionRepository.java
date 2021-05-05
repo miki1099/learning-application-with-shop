@@ -22,4 +22,15 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
     long countByCategory(String category);
 
+    @Query(nativeQuery=true, value = "SELECT * FROM Question q WHERE q.id NOT IN (:ids) ORDER BY rand() LIMIT :amount")
+    List<Question> findQuestionsNotInIdList(@Param("ids") List<Integer> ids, @Param("amount") int amount);
+
+    @Query(nativeQuery=true, value = "SELECT * FROM Question q " +
+            "WHERE q.id NOT IN (:ids) " +
+            "and q.category = :category " +
+            "ORDER BY rand() " +
+            "LIMIT :amount")
+    List<Question> findQuestionsByCategoryNotInIdList(@Param("ids") List<Integer> ids,
+                                                      @Param("amount") int amount,
+                                                      @Param("category") String category);
 }

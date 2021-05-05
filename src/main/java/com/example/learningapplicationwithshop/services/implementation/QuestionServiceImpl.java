@@ -2,9 +2,12 @@ package com.example.learningapplicationwithshop.services.implementation;
 
 import com.example.learningapplicationwithshop.exceptions.BadInputException;
 import com.example.learningapplicationwithshop.exceptions.QuestionNotFoundException;
+import com.example.learningapplicationwithshop.exceptions.UserNotFoundException;
 import com.example.learningapplicationwithshop.model.Question;
+import com.example.learningapplicationwithshop.model.User;
 import com.example.learningapplicationwithshop.model.dto.QuestionDto;
 import com.example.learningapplicationwithshop.repositories.QuestionRepository;
+import com.example.learningapplicationwithshop.repositories.UserRepository;
 import com.example.learningapplicationwithshop.services.QuestionService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -22,6 +25,7 @@ import java.util.stream.Collectors;
 public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionRepository questionRepository;
+    private final UserRepository userRepository;
 
     private final ModelMapper modelMapper;
 
@@ -109,6 +113,23 @@ public class QuestionServiceImpl implements QuestionService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<QuestionDto> getQuestionsNotLearned(String userLogin, int amount, String category) {
+        List<Integer> questionsLearnedIdList = getUserSafe(userLogin).getQuestionsLearned()
+                .stream()
+                .map(Question::getId)
+                .collect(Collectors.toList());
+        List<Question> questions;
+        if(category == null) {
+            questions = questionRepository.findQuestionsNotInIdList(questionsLearnedIdList, amount);
+        } else {
+            questions = questionRepository.findQuestionsByCategoryNotInIdList(questionsLearnedIdList, amount, category);
+        }
+        return questions.stream()
+                .map(question -> modelMapper.map(question, QuestionDto.class))
+                .collect(Collectors.toList());
+    }
+
     private Question getOneSafe(Integer id) {
         if (questionRepository.existsById(id)) {
             return questionRepository.getOne(id);
@@ -117,4 +138,7 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+    private User getUserSafe(String login) {
+            return userRepository.findByLogin(login).orElseThrow(() -> new UserNotFoundException("id"));
+    }
 }
