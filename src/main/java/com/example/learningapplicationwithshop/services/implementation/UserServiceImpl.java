@@ -161,6 +161,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public double questionLearnedPercentage(String userLogin, String category) {
+        User user = userRepository.findByLogin(userLogin)
+                .orElseThrow(() ->
+                        new UserNotFoundException("User with login: " + userLogin + " does not exist in database!"));
+        double specificQuestionLearned;
+        long specificQuestionsInDb;
+        if(category != null) {
+            specificQuestionLearned = user.getQuestionsLearned()
+                    .stream()
+                    .filter(question -> question.getCategory().equals(category))
+                    .count();
+            specificQuestionsInDb = questionRepository.countByCategory(category);
+        } else {
+            specificQuestionLearned = user.getQuestionsLearned().size();
+            specificQuestionsInDb = questionRepository.count();
+        }
+        if(specificQuestionsInDb == 0) return 0;
+        return specificQuestionLearned/specificQuestionsInDb * 100;
+    }
+
+    @Override
     public Boolean isExistsByLogin(String login) {
         return userRepository.existsByLogin(login);
     }

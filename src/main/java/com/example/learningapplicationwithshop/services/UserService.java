@@ -37,6 +37,8 @@ public interface UserService {
 
     UserDto changePassword(int id, PasswordDto passwordDto);
 
+    double questionLearnedPercentage(String userLogin, String category);
+
     Boolean isExistsByLogin(String login);
 
     Boolean isExistsByEmail(String email);
