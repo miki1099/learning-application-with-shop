@@ -120,10 +120,14 @@ public class QuestionServiceImpl implements QuestionService {
                 .map(Question::getId)
                 .collect(Collectors.toList());
         List<Question> questions;
-        if(category == null) {
+        if(category == null && questionsLearnedIdList.size() != 0) {
             questions = questionRepository.findQuestionsNotInIdList(questionsLearnedIdList, amount);
-        } else {
+        } else if(category != null && questionsLearnedIdList.size() != 0){
             questions = questionRepository.findQuestionsByCategoryNotInIdList(questionsLearnedIdList, amount, category);
+        } else if(category == null){
+            questions = questionRepository.getSpecificAmount(amount);
+        } else {
+            questions = questionRepository.findAllByCategory(category, PageRequest.of(0, amount)).getContent();
         }
         return questions.stream()
                 .map(question -> modelMapper.map(question, QuestionDto.class))
