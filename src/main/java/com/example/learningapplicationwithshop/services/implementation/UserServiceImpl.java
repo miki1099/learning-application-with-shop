@@ -142,9 +142,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto changeEnable(int id, boolean isEnable) {
         User user = getOneSafe(id);
         user.setEnabled(isEnable);
+        userRepository.save(user);
         return modelMapper.map(user, UserDto.class);
     }
 
