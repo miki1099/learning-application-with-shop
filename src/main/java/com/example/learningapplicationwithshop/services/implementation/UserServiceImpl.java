@@ -182,6 +182,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public long countAllUsers() {
+        return userRepository.count();
+    }
+
+    @Override
     public Boolean isExistsByLogin(String login) {
         return userRepository.existsByLogin(login);
     }

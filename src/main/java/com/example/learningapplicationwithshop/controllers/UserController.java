@@ -48,6 +48,11 @@ public class UserController {
         return userService.changeEnable(userId, isEnable);
     }
 
+    @GetMapping(value = "admin/countAllUsers")
+    public long countAllUsers() {
+        return userService.countAllUsers();
+    }
+
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public UserDto create(@Valid @RequestBody UserSaveDto user) {

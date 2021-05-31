@@ -39,6 +39,8 @@ public interface UserService {
 
     double questionLearnedPercentage(String userLogin, String category);
 
+    long countAllUsers();
+
     Boolean isExistsByLogin(String login);
 
     Boolean isExistsByEmail(String email);
