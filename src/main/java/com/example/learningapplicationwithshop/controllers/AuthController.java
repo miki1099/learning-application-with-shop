@@ -1,6 +1,8 @@
 package com.example.learningapplicationwithshop.controllers;
 
+import com.example.learningapplicationwithshop.exceptions.UserNotFoundException;
 import com.example.learningapplicationwithshop.model.User;
+import com.example.learningapplicationwithshop.model.dto.UserDto;
 import com.example.learningapplicationwithshop.model.dto.UserLoginDto;
 import com.example.learningapplicationwithshop.model.dto.UserLoginReturnDto;
 import com.example.learningapplicationwithshop.security.JwtTokenUtil;
@@ -31,9 +33,18 @@ public class AuthController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<UserLoginReturnDto> login(@RequestBody UserLoginDto user) {
         try {
+            UserDto userEmail;
+            String login;
+            try {
+                userEmail = userService.findByEmail(user.getLogin());
+                login = userEmail.getLogin();
+            } catch (UserNotFoundException e) {
+                login = user.getLogin();
+            }
+
             Authentication authenticate = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            user.getLogin(), user.getPassword()
+                            login, user.getPassword()
                     )
             );
             User userAuth = (User) authenticate.getPrincipal();
