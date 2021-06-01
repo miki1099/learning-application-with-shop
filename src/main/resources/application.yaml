@@ -22,5 +22,16 @@ spring:
     generate-ddl: true
   messages:
     basename: messages/messages
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: learning.app.botmail@gmail.com
+    password: haslo1410
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 server:
-  port: 8080
+  port: 8082

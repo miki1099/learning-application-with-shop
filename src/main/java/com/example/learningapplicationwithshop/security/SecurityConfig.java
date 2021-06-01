@@ -99,6 +99,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/login", "/register").permitAll()
+                .antMatchers(HttpMethod.PUT, "/forgotPassword").permitAll()
                 .antMatchers("/swagger-ui/index.html#/").permitAll()
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",

@@ -64,6 +64,11 @@ public class AuthController {
         }
     }
 
+    @PutMapping(value = "/forgotPassword")
+    public void forgotPassword(@RequestParam("email") String email) {
+        userService.resetPassword(email);
+    }
+
     @PostMapping(value = "/refreshToken")
     public ResponseEntity<UserLoginReturnDto> refreshToken(Principal principal) {
         User userAuth = modelMapper.map(userService.findByLogin(principal.getName()), User.class);

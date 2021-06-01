@@ -15,9 +15,12 @@ import com.example.learningapplicationwithshop.repositories.RoleRepository;
 import com.example.learningapplicationwithshop.repositories.UserRepository;
 import com.example.learningapplicationwithshop.services.UserService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +40,7 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final AddressRepository addressRepository;
     private final QuestionRepository questionRepository;
-
+    private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper = new ModelMapper();
 
@@ -61,6 +64,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public void resetPassword(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("email"));
+
+        String generatedPassword = RandomStringUtils.random(20, true, true);
+        user.setPassword(passwordEncoder.encode(generatedPassword));
+
+        userRepository.save(user);
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getEmail());
+        mailMessage.setSubject("Complete Password Reset!");
+        mailMessage.setFrom("learning.app.botmail@gmail.com");
+        mailMessage.setText("You made request to reset password.\nYour new password is:\n"
+                + generatedPassword + "\nNow login with new one an change it in user settings!" );
+        javaMailSender.send(mailMessage);
+    }
+
+    @Override
     public UserDto getUserByLastName(String lastname) {
         Optional<User> userFound = userRepository.findFirstByLastName(lastname);
         if(userFound.isPresent()) return modelMapper.map(userFound.get(), UserDto.class);
@@ -70,10 +94,19 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto createUser(UserSaveDto user) {
+        String password = user.getPassword();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User userSaved = userRepository.save(modelMapper.map(user, User.class));
         userSaved.setEnabled(true);
         userSaved.setRoles(Set.of(roleRepository.getOne(1)));
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getEmail());
+        mailMessage.setSubject("Welcome to our app!");
+        mailMessage.setFrom("learning.app.botmail@gmail.com");
+        mailMessage.setText("Hello!\nYou created account on our website.\nYour login is: "
+                + userSaved.getLogin() + "\nPassword: " + password
+                + "\nWe hope you will learn a lot with us! :)" );
+        javaMailSender.send(mailMessage);
         return modelMapper.map(userSaved, UserDto.class);
     }
 

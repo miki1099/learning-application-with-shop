@@ -17,6 +17,8 @@ public interface UserService {
 
     void deleteUserById(int id);
 
+    void resetPassword(String email);
+
     UserDto getUserByLastName(String lastname);
 
     UserDto createUser(UserSaveDto user);
