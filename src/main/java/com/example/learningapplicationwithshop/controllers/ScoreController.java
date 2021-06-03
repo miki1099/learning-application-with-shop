@@ -4,6 +4,7 @@ import com.example.learningapplicationwithshop.model.dto.ScoreDto;
 import com.example.learningapplicationwithshop.services.implementation.ScoreServiceImpl;
 import com.example.learningapplicationwithshop.services.implementation.UserServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +30,8 @@ public class ScoreController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/score/create/{score}", method = RequestMethod.POST)
-    public ScoreDto createScore(@PathVariable int score, Principal principal, @RequestParam String category) {
-        return scoreService.create(getPrincipalUserId(principal), score, category);
+    public ScoreDto createScore(@PathVariable int score, Principal principal, @RequestParam String category, @RequestParam(required = false) Double testTime) {
+        return scoreService.create(getPrincipalUserId(principal), score, category, testTime);
     }
 
     @RequestMapping(value = "/score/userScoreByDate", method = RequestMethod.GET)

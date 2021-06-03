@@ -35,4 +35,5 @@ public class Score {
     private User userId;
 
     private String category;
+    private Double testTime;
 }
