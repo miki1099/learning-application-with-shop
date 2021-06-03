@@ -94,7 +94,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto createUser(UserSaveDto user) {
-        String password = user.getPassword();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User userSaved = userRepository.save(modelMapper.map(user, User.class));
         userSaved.setEnabled(true);
@@ -103,8 +102,8 @@ public class UserServiceImpl implements UserService {
         mailMessage.setTo(user.getEmail());
         mailMessage.setSubject("Welcome to our app!");
         mailMessage.setFrom("learning.app.botmail@gmail.com");
-        mailMessage.setText("Hello!\nYou created account on our website.\nYour login is: "
-                + userSaved.getLogin() + "\nPassword: " + password
+        mailMessage.setText("Hello!\nThank you for creating an account on our website.\nYour login is: "
+                + userSaved.getLogin()
                 + "\nWe hope you will learn a lot with us! :)" );
         javaMailSender.send(mailMessage);
         return modelMapper.map(userSaved, UserDto.class);
